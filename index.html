@@ -89,8 +89,7 @@ main{padding:18px 20px}
 <div class="ml">Prompt &mdash; ready to paste</div>
 <div class="pb" id="mPrompt"></div>
 <div class="ma">
-<button class="btn bp" onclick="copyOpen()">&#x26A1; Copy &amp; Open New Chat</button>
-<button class="btn bs" onclick="copyOnly()">&#x1F4CB; Copy Prompt</button>
+<button class="btn bp" onclick="copyOnly()">&#x1F4CB; Copy Prompt</button>
 <span class="cpd" id="cpd">&#x2713; Copied!</span>
 </div>
 </div>
@@ -211,7 +210,6 @@ function handleOv(e){if(e.target===document.getElementById("ov"))closeModal();}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
 function getP(){return cur?cur.p:"";}
 function copyOnly(){navigator.clipboard.writeText(getP()).then(()=>{document.getElementById("cpd").classList.add("show");toast();}).catch(fb);}
-function copyOpen(){navigator.clipboard.writeText(getP()).then(()=>{toast();setTimeout(()=>window.open("https://copilot.microsoft.com","_blank"),300);}).catch(()=>{fb();window.open("https://copilot.microsoft.com","_blank");});}
 function fb(){const ta=document.createElement("textarea");ta.value=getP();ta.style.cssText="position:fixed;opacity:0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);document.getElementById("cpd").classList.add("show");toast();}
 function toast(){const t=document.getElementById("toast");t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200);}
 function doFilter(){
