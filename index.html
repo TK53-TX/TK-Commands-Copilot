@@ -6,38 +6,81 @@
 <title>TK Visual Command Tree</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Calibri,sans-serif;background:#080c18;color:#e8edf5;min-height:100vh;padding-bottom:60px}
+body{font-family:'Segoe UI',Calibri,sans-serif;background:#080c18;color:#e8edf5;min-height:100vh;padding-bottom:120px;position:relative}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+background:radial-gradient(600px 400px at 12% 8%,rgba(0,212,255,.07),transparent 60%),
+radial-gradient(700px 500px at 88% 20%,rgba(124,58,237,.08),transparent 60%),
+radial-gradient(600px 500px at 50% 95%,rgba(244,114,182,.05),transparent 60%)}
+header,main,.sw,.recent,.heat,.chipsrow,footer{position:relative;z-index:1}
 header{background:linear-gradient(135deg,#080c18,#0d1a30);border-bottom:1px solid #1e2d45;padding:22px 20px 16px;position:sticky;top:0;z-index:100}
-.hdr{display:flex;align-items:center;gap:12px}
-.logo{width:36px;height:36px;background:linear-gradient(135deg,#00d4ff,#7c3aed);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0}
-h1{font-size:18px;font-weight:700;letter-spacing:.04em;background:linear-gradient(90deg,#00d4ff,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{width:36px;height:36px;background:linear-gradient(135deg,#00d4ff,#7c3aed,#f472b6);background-size:300% 300%;animation:gflow 8s ease infinite;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0}
+h1{font-size:18px;font-weight:700;letter-spacing:.04em;background:linear-gradient(90deg,#00d4ff,#a5b4fc,#f472b6,#00d4ff);background-size:300% 100%;animation:gflow 10s linear infinite;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@keyframes gflow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .sub{font-size:11px;color:#6b7fa3;margin-top:3px}
-.pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.cotd{margin-left:auto;background:#111827;border:1px solid var(--dc,#1e2d45);border-radius:9px;padding:6px 12px;cursor:pointer;transition:transform .15s}
+.cotd:hover{transform:translateY(-1px)}
+.cotd .cl1{font-size:8px;font-weight:700;letter-spacing:.14em;color:#6b7fa3}
+.cotd .cl2{font-size:12px;font-weight:800;letter-spacing:.05em;color:var(--dc,#00d4ff)}
+.pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
 .pill{background:#111827;border:1px solid #1e2d45;border-radius:20px;padding:3px 12px;font-size:11px;color:#6b7fa3}
 .pill b{color:#00d4ff}
-.sw{padding:14px 20px 0}
+.hbtn{background:#111827;border:1px solid #1e2d45;border-radius:20px;padding:4px 14px;font-size:11px;color:#a5b4fc;cursor:pointer;transition:border-color .15s,color .15s;font-weight:600;letter-spacing:.04em}
+.hbtn:hover{border-color:#00d4ff;color:#00d4ff}
+.hbtn.on{background:#0d2438;border-color:#00d4ff;color:#00d4ff}
+.sw{padding:14px 20px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .si{width:100%;max-width:480px;background:#111827;border:1px solid #1e2d45;border-radius:9px;padding:9px 14px 9px 38px;color:#e8edf5;font-size:13px;outline:none;transition:border .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%236b7fa3' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center}
 .si:focus{border-color:#00d4ff}
 .si::placeholder{color:#6b7fa3}
+.skey{font-size:10px;color:#6b7fa3;border:1px solid #1e2d45;border-radius:4px;padding:1px 6px;background:#111827}
+.chipsrow{padding:12px 20px 0;display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:#111827;border:1px solid #1e2d45;border-radius:20px;padding:4px 13px;font-size:10px;font-weight:700;letter-spacing:.06em;cursor:pointer;color:#6b7fa3;transition:all .15s}
+.chip:hover{border-color:var(--c,#00d4ff);color:var(--c,#00d4ff)}
+.chip.on{border-color:var(--c,#00d4ff);color:var(--c,#00d4ff);background:#0d1f33;box-shadow:0 0 12px var(--cg,rgba(0,212,255,.2))}
+.recent,.heat{padding:10px 20px 0;display:none;gap:8px;flex-wrap:wrap;align-items:center}
+.recent.show,.heat.show{display:flex}
+.rlbl{font-size:9px;font-weight:700;letter-spacing:.12em;color:#6b7fa3}
+.rchip{background:#111827;border:1px solid #1e2d45;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;transition:border-color .15s;letter-spacing:.05em}
+.rchip:hover{border-color:currentColor}
+.hbar{display:flex;align-items:center;gap:7px;background:#111827;border:1px solid #1e2d45;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.05em;transition:border-color .15s}
+.hbar:hover{border-color:currentColor}
+.hb{height:5px;border-radius:3px;background:currentColor;opacity:.85}
+.hn{font-size:9px;color:#6b7fa3;font-weight:600}
 main{padding:18px 20px}
 .cat{margin-bottom:28px}
-.ch{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ch{display:flex;align-items:center;gap:10px;margin-bottom:12px;cursor:pointer;user-select:none}
 .cn{font-size:9px;font-weight:700;letter-spacing:.12em;color:#6b7fa3;background:#111827;border:1px solid #1e2d45;border-radius:4px;padding:2px 7px}
 .ct{font-size:14px;font-weight:700;letter-spacing:.05em}
 .cl{flex:1;height:1px;background:linear-gradient(90deg,#1e2d45,transparent)}
+.cc{font-size:10px;color:#6b7fa3}
+.chev{font-size:10px;color:#6b7fa3;transition:transform .2s;display:inline-block}
+.cat.closed .chev{transform:rotate(-90deg)}
+.cat.closed .grid{display:none}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
-.card{background:#111827;border:1px solid #1e2d45;border-radius:11px;padding:13px 13px 13px 16px;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s;position:relative;overflow:hidden}
+body.compact .grid{grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:7px}
+.card{background:linear-gradient(160deg,var(--cg,rgba(255,255,255,.02)),#111827 55%);border:1px solid #1e2d45;border-radius:11px;padding:13px 13px 13px 16px;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s;position:relative;overflow:hidden}
+body.compact .card{padding:9px 9px 9px 13px}
 .card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--c)}
-.card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4);border-color:var(--c)}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 24px var(--cg2,rgba(0,0,0,.4));border-color:var(--c)}
 .card:active{transform:scale(.97)}
-.ci{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;letter-spacing:.03em;margin-bottom:7px;background:rgba(255,255,255,.06);color:var(--c)}
+.card.insel{border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 0 18px var(--cg2)}
+.card.kfocus{border-color:var(--c);box-shadow:0 0 0 2px var(--c)}
+.ci{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;letter-spacing:.03em;margin-bottom:7px;background:linear-gradient(135deg,var(--cg,rgba(255,255,255,.06)),rgba(255,255,255,.04));color:var(--c)}
+body.compact .ci{width:22px;height:22px;margin-bottom:5px}
 .nm{font-size:11px;font-weight:700;color:var(--c);letter-spacing:.05em;margin-bottom:4px;text-transform:uppercase}
 .ds{font-size:10px;color:#6b7fa3;line-height:1.5}
+body.compact .ds{display:none}
+mark{background:transparent;color:var(--c);text-shadow:0 0 8px var(--cg2);font-weight:800}
+.ds mark{color:#c7d2e8}
+.custag{position:absolute;bottom:6px;right:8px;font-size:7px;font-weight:800;letter-spacing:.1em;color:var(--c);opacity:.7}
+.star{position:absolute;top:8px;right:8px;font-size:13px;color:#334561;cursor:pointer;transition:color .15s,transform .15s;line-height:1;z-index:2}
+.star:hover{transform:scale(1.2)}
+.star.fav{color:#fbbf24}
 .nr{display:none;text-align:center;padding:40px;color:#6b7fa3;font-size:13px}
 .nr.show{display:block}
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:999;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
 .ov.open{display:flex}
-.modal{background:#0d1626;border:1px solid #1e2d45;border-radius:16px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;animation:up .2s ease;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.modal{background:#0d1626;border:1px solid var(--mc,#1e2d45);border-radius:16px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;animation:up .2s ease;box-shadow:0 24px 60px rgba(0,0,0,.6),0 0 40px var(--mg,transparent)}
 @keyframes up{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 .mh{padding:20px 20px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .mt{font-size:9px;font-weight:700;letter-spacing:.12em;color:#6b7fa3;margin-bottom:5px;text-transform:uppercase}
@@ -47,86 +90,194 @@ main{padding:18px 20px}
 .md{padding:8px 20px 0;font-size:12px;color:#6b7fa3;line-height:1.6}
 .hr{margin:16px 20px 0;border:none;border-top:1px solid #1e2d45}
 .ml{padding:14px 20px 7px;font-size:10px;font-weight:700;letter-spacing:.1em;color:#6b7fa3;text-transform:uppercase;display:flex;align-items:center;gap:5px}
-.ml::before{content:'';width:5px;height:5px;border-radius:50%;background:#00d4ff;display:inline-block}
-.pb{margin:0 20px;background:#0a0f1e;border:1px solid #1e2d45;border-radius:9px;padding:16px;font-size:12px;line-height:1.9;color:#e8edf5;white-space:pre-wrap;font-family:'Segoe UI',Calibri,sans-serif}
-.ph{color:#00d4ff;background:rgba(0,212,255,.08);border-radius:3px;padding:1px 4px;font-style:italic}
-.ma{padding:16px 20px 20px;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
-.btn{padding:10px 18px;border-radius:9px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:.04em;display:flex;align-items:center;gap:7px}
-.bp{background:linear-gradient(135deg,#00d4ff,#0099bb);color:#000}
-.bp:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(0,212,255,.35)}
-.bs{background:#111827;border:1px solid #1e2d45;color:#e8edf5}
-.bs:hover{border-color:#00d4ff;color:#00d4ff}
-.cpd{font-size:11px;color:#10b981;display:none;align-items:center;gap:4px}
-.cpd.show{display:flex}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111827;border:1px solid #10b981;border-radius:9px;padding:10px 20px;font-size:12px;color:#10b981;font-weight:600;z-index:9999;opacity:0;pointer-events:none;transition:opacity .25s;white-space:nowrap}
-.toast.show{opacity:1}
-@media(max-width:480px){.grid{grid-template-columns:1fr 1fr}.mn{font-size:16px}}
+.ml::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--mc,#00d4ff);display:inline-block}
+.mhint{padding:0 20px;font-size:10px;color:#4a5d80;line-height:1.5}
+.pbx{margin:10px 20px 0;background:#080c18;border:1px solid #1e2d45;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;white-space:pre-wrap;color:#c7d2e8;font-family:Consolas,'Courier New',monospace}
+.phi{background:#0d2438;border:1px dashed #2e5a7a;border-radius:5px;color:#7dd3fc;font-size:11px;font-family:inherit;padding:2px 8px;margin:1px 0;outline:none;min-width:120px;max-width:100%;transition:border-color .15s}
+.phi:focus{border-color:#00d4ff;border-style:solid}
+.phi::placeholder{color:#3d6a8a}
+.notes{margin:10px 20px 0;width:calc(100% - 40px);background:#080c18;border:1px solid #1e2d45;border-radius:10px;padding:12px;font-size:12px;line-height:1.6;color:#c7d2e8;font-family:inherit;resize:vertical;min-height:64px;outline:none;transition:border-color .15s}
+.notes:focus{border-color:var(--mc,#00d4ff)}
+.notes::placeholder{color:#4a5d80}
+.mbtns{display:flex;gap:10px;padding:16px 20px 20px;flex-wrap:wrap}
+.btn{flex:1;min-width:150px;border:none;border-radius:9px;padding:11px 16px;font-size:12px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:transform .12s,opacity .15s;text-transform:uppercase;position:relative}
+.btn:active{transform:scale(.97)}
+.btn.pulse{animation:pring .55s ease-out}
+@keyframes pring{0%{box-shadow:0 0 0 0 var(--pc,#00d4ff)}100%{box-shadow:0 0 0 20px transparent}}
+.bp{background:linear-gradient(135deg,#00d4ff,#7c3aed);color:#fff}
+.bs{background:#111827;color:#a5b4fc;border:1px solid #1e2d45}
+.bs:hover{border-color:#00d4ff}
+.bd{background:#111827;color:#f87171;border:1px solid #3a1e2d}
+.bd:hover{border-color:#f87171}
+.cpd{display:none;padding:0 20px 16px;font-size:11px;color:#34d399;font-weight:600}
+.cpd.show{display:block}
+.frm{padding:6px 20px 0;display:flex;flex-direction:column;gap:10px}
+.frow{display:flex;gap:10px;flex-wrap:wrap}
+.fl{font-size:9px;font-weight:700;letter-spacing:.12em;color:#6b7fa3;text-transform:uppercase;margin-bottom:4px;display:block}
+.fi,.fs,.fta{background:#080c18;border:1px solid #1e2d45;border-radius:8px;padding:9px 12px;color:#e8edf5;font-size:12px;outline:none;width:100%;font-family:inherit;transition:border-color .15s}
+.fi:focus,.fs:focus,.fta:focus{border-color:#00d4ff}
+.fta{min-height:110px;resize:vertical;font-family:Consolas,'Courier New',monospace;line-height:1.6}
+.fgrp{flex:1;min-width:140px}
+.ferr{padding:0 20px;font-size:11px;color:#f87171;font-weight:600;display:none}
+.ferr.show{display:block}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:#0d2438;border:1px solid var(--tc,#00d4ff);color:var(--tc,#7dd3fc);padding:10px 22px;border-radius:9px;font-size:12px;font-weight:600;transition:transform .25s;z-index:1200;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.tray{position:fixed;bottom:0;left:0;right:0;background:#0d1626;border-top:1px solid #00d4ff;padding:12px 20px;display:none;align-items:center;gap:12px;z-index:500;flex-wrap:wrap;box-shadow:0 -8px 30px rgba(0,0,0,.5)}
+.tray.show{display:flex}
+.tlbl{font-size:10px;font-weight:700;letter-spacing:.1em;color:#00d4ff}
+.tchips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.tchip{background:#111827;border:1px solid #1e2d45;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;letter-spacing:.05em;display:flex;align-items:center;gap:7px}
+.tchip span{cursor:pointer;color:#6b7fa3}
+.tchip span:hover{color:#f87171}
+.tbtn{background:linear-gradient(135deg,#00d4ff,#7c3aed);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:11px;font-weight:700;letter-spacing:.05em;cursor:pointer;text-transform:uppercase}
+.tbtn:disabled{opacity:.4;cursor:not-allowed}
+footer{padding:26px 20px 10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.fbtn{background:#111827;border:1px solid #1e2d45;border-radius:8px;padding:8px 16px;font-size:11px;color:#6b7fa3;cursor:pointer;font-weight:600;letter-spacing:.05em;transition:border-color .15s,color .15s}
+.fbtn:hover{border-color:#00d4ff;color:#00d4ff}
+@media(max-width:520px){.grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.btn{min-width:120px}.cotd{margin-left:0}}
 </style>
 </head>
 <body>
 <header>
-<div class="hdr">
-<div class="logo">TK</div>
-<div><h1>VISUAL COMMAND TREE</h1><div class="sub">Complete Copilot OS &middot; Powered by Smarty</div></div>
-</div>
-<div class="pills">
-<div class="pill"><b>9</b> Categories</div>
-<div class="pill"><b>50</b> Commands</div>
-<div class="pill">Tap any card &rarr; copy prompt</div>
-</div>
+  <div class="hdr">
+    <div class="logo">TK</div>
+    <div>
+      <h1>TK VISUAL COMMAND TREE</h1>
+      <div class="sub">Precision prompt commands &middot; tap a card, fill the blanks, copy, deploy</div>
+    </div>
+    <div class="cotd" id="cotd" title="Command of the day">
+      <div class="cl1">TODAY'S DRILL</div>
+      <div class="cl2" id="cotdName"></div>
+    </div>
+  </div>
+  <div class="pills">
+    <div class="pill"><b id="cCount">50</b> COMMANDS</div>
+    <div class="pill"><b>9</b> CATEGORIES</div>
+    <button class="hbtn" id="comboBtn" onclick="toggleCombo()">&#9741; COMBO</button>
+    <button class="hbtn" id="sortBtn" onclick="cycleSort()">SORT: CATEGORY</button>
+    <button class="hbtn" id="denBtn" onclick="toggleDensity()">&#9707; COMPACT</button>
+    <button class="hbtn" onclick="toggleAll()">&#8645; COLLAPSE</button>
+    <button class="hbtn" onclick="openBuilder()">&#65291; ADD COMMAND</button>
+  </div>
 </header>
-<div class="sw"><input class="si" type="text" placeholder="Search commands..." id="srch" oninput="doFilter()" autocomplete="off" spellcheck="false"></div>
+
+<div class="sw">
+  <input class="si" id="srch" type="text" placeholder="Search names, acronyms, descriptions, or full prompt text..." oninput="doFilter()">
+  <span class="skey">press / to search &middot; arrows to move &middot; enter to open</span>
+</div>
+
+<div class="chipsrow" id="chips"></div>
+<div class="recent" id="recent"></div>
+<div class="heat" id="heat"></div>
+
 <main id="main"></main>
-<div class="nr" id="nr">No commands match your search.</div>
-<div class="ov" id="ov" onclick="handleOv(event)">
-<div class="modal">
-<div class="mh">
-<div><div class="mt" id="mTag"></div><div class="mn" id="mName"></div></div>
-<button class="mx" onclick="closeModal()">&#x2715;</button>
+<div class="nr" id="nr">No commands match that search.</div>
+
+<footer>
+  <button class="fbtn" onclick="exportJSON()">&#8681; EXPORT JSON</button>
+  <button class="fbtn" onclick="exportMD()">&#8681; EXPORT MARKDOWN</button>
+</footer>
+
+<div class="tray" id="tray">
+  <div class="tlbl">COMBO STACK</div>
+  <div class="tchips" id="tchips"></div>
+  <button class="tbtn" id="tgen" onclick="genCombo()" disabled>GENERATE STACKED PROMPT</button>
 </div>
-<div class="md" id="mDesc"></div>
-<hr class="hr">
-<div class="ml">Prompt &mdash; ready to paste</div>
-<div class="pb" id="mPrompt"></div>
-<div class="ma">
-<button class="btn bp" onclick="copyOnly()">&#x1F4CB; Copy Prompt</button>
-<span class="cpd" id="cpd">&#x2713; Copied!</span>
+
+<div class="ov" id="ov" onclick="handleOv(event,'ov')">
+  <div class="modal" id="mBox">
+    <div class="mh">
+      <div>
+        <div class="mt" id="mTag"></div>
+        <div class="mn" id="mName"></div>
+      </div>
+      <div class="mx" onclick="closeModal()">&#10005;</div>
+    </div>
+    <div class="md" id="mDesc"></div>
+    <hr class="hr">
+    <div class="ml">PROMPT</div>
+    <div class="mhint" id="mHint">Fill in the highlighted fields, then copy. Empty fields copy as [PLACEHOLDER] text.</div>
+    <div class="pbx" id="mPrompt"></div>
+    <div class="ml" id="nLbl">MY NOTES</div>
+    <textarea class="notes" id="mNotes" placeholder="Private notes for this command: what worked, tweaks, results. Saved on this device only." oninput="saveNote()"></textarea>
+    <div class="mbtns">
+      <button class="btn bp" id="copyBtn" onclick="copyFilled()">COPY PROMPT</button>
+      <button class="btn bs" onclick="copyLink()">COPY LINK</button>
+      <button class="btn bd" id="delBtn" onclick="delCustom()" style="display:none">DELETE</button>
+    </div>
+    <div class="cpd" id="cpd">Copied to clipboard. Ready to paste.</div>
+  </div>
 </div>
+
+<div class="ov" id="ov2" onclick="handleOv(event,'ov2')">
+  <div class="modal">
+    <div class="mh">
+      <div>
+        <div class="mt">COMMAND BUILDER</div>
+        <div class="mn" style="color:#00d4ff">ADD YOUR OWN COMMAND</div>
+      </div>
+      <div class="mx" onclick="closeBuilder()">&#10005;</div>
+    </div>
+    <div class="md">Saved on this device and included in exports. Use [BRACKETS] in the prompt for fill-in fields.</div>
+    <hr class="hr">
+    <div class="frm">
+      <div class="frow">
+        <div class="fgrp"><label class="fl">Category</label><select class="fs" id="bCat"></select></div>
+        <div class="fgrp"><label class="fl">Acronym (2-5 chars)</label><input class="fi" id="bAcr" maxlength="5" placeholder="e.g. GONO"></div>
+      </div>
+      <div class="frow">
+        <div class="fgrp"><label class="fl">Name</label><input class="fi" id="bName" placeholder="e.g. Go No-Go Gate"></div>
+      </div>
+      <div class="frow">
+        <div class="fgrp"><label class="fl">Short description</label><input class="fi" id="bDesc" placeholder="One line shown on the card"></div>
+      </div>
+      <div class="frow">
+        <div class="fgrp"><label class="fl">Prompt</label><textarea class="fta" id="bPrompt" placeholder="Activate ... Mode. ...&#10;&#10;[PASTE YOUR INPUT HERE]&#10;&#10;Output format: ..."></textarea></div>
+      </div>
+    </div>
+    <div class="ferr" id="bErr"></div>
+    <div class="mbtns">
+      <button class="btn bp" onclick="saveCustom()">SAVE COMMAND</button>
+      <button class="btn bs" onclick="closeBuilder()">CANCEL</button>
+    </div>
+  </div>
 </div>
-</div>
-<div class="toast" id="toast">&#x2713; Copied to clipboard</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
 <script>
+const REINFORCE="\n\nIf you drift from this protocol at any point in this conversation, I will type REASSERT and you will re-apply it in full without commentary.";
 const CATS=[
 {num:"01",label:"COGNITIVE MODES",color:"#00d4ff",cmds:[
 {a:"BRKP",n:"Point Break",d:"Shatter the core assumption of any argument",p:"Activate Point Break Mode. Identify and shatter the core assumption at the center of this argument or position:\n\n[PASTE YOUR ARGUMENT OR POSITION HERE]\n\nDo not just challenge it. Break it completely. Show exactly what collapses when that assumption is removed and why the argument cannot stand without it."},
 {a:"DEEP",n:"Deep Structure",d:"Expose the invisible architecture behind any idea",p:"Activate Deep Structure Mode. Expose the underlying architecture of this idea:\n\n[PASTE YOUR IDEA HERE]\n\nWhat invisible framework holds it together? What are the load-bearing assumptions? What would someone need to believe for this to be true? Go below the surface and give me the skeleton, not the skin."},
-{a:"CNTR",n:"Counter Argument",d:"Build the strongest case against your own position",p:"Activate Counter Argument Mode. Build the strongest possible case against this position I hold:\n\n[STATE YOUR POSITION HERE]\n\nBe rigorous, specific, and unsparing. I need the real opposition, not a strawman. Make the counter-argument better than anything a critic could produce."},
+{a:"CNTR",n:"Counter Argument",d:"One-shot deliverable: the strongest case against your position",p:"Activate Counter Argument Mode. This is a one-shot deliverable, not an ongoing debate. Build the strongest possible standalone case against this position I hold:\n\n[STATE YOUR POSITION HERE]\n\nBe rigorous, specific, and unsparing. I need the real opposition, not a strawman. Structure it as a finished argument: thesis, supporting points, evidence, and the single most damaging objection. Make it better than anything a critic could produce."},
 {a:"STML",n:"Steelman",d:"Build the strongest version of any argument",p:"Activate Steelman Mode. Build the strongest, most compelling, most intellectually honest version of this argument:\n\n[PASTE THE ARGUMENT HERE]\n\nMake it better than the original. Plug the holes, sharpen the logic, add the best supporting evidence. Then tell me what it would take to defeat this steelmanned version."},
 {a:"REDM",n:"Red Team",d:"Attack your plan from the adversary perspective",p:"Activate Red Team Mode. You are now an adversarial analyst attacking this plan from the outside:\n\n[PASTE YOUR PLAN OR IDEA HERE]\n\nFind every vulnerability. Exploit every assumption. Identify every failure point. Operate like someone whose job is to make this fail, then show me the full attack surface."},
-{a:"SCEN",n:"Scenario Tree",d:"Map branching futures and second-order consequences",p:"Activate Scenario Tree Mode. Map the branching futures and second-order consequences of this decision:\n\n[PASTE YOUR DECISION OR EVENT HERE]\n\nBuild 3 distinct scenario branches: best case, worst case, and most likely. Trace each branch 2 to 3 levels deep. Flag which signals would tell me which branch I am entering."},
+{a:"SCEN",n:"Scenario Tree",d:"Map branching futures and second-order consequences",p:"Activate Scenario Tree Mode. You are a scenario planning analyst. Map the branching futures and second-order consequences of this decision:\n\n[PASTE YOUR DECISION OR EVENT HERE]\n\nBuild 3 distinct scenario branches: best case, worst case, and most likely. Trace each branch 2 to 3 levels deep.\n\nOutput format: an indented tree, one branch per section, with each level clearly nested. End each branch with a line labeled SIGNALS listing the early indicators that would tell me I am entering that branch."},
 {a:"DECO",n:"Cognitive Decomposition",d:"Break complex thinking into discrete processable parts",p:"Activate Cognitive Decomposition Mode. Break down this complex topic into its discrete, processable components:\n\n[PASTE YOUR TOPIC OR PROBLEM HERE]\n\nIdentify the core sub-problems, the dependencies between them, and the sequence in which they must be addressed. Give me a map I can actually work from."},
 {a:"FRST",n:"First Principles",d:"Strip back to foundational truths only",p:"Activate First Principles Mode. Strip this topic back to its foundational truths:\n\n[PASTE YOUR TOPIC OR BELIEF HERE]\n\nRemove all assumptions, conventions, and inherited thinking. What do we know for certain? What must be true from the ground up? Rebuild the understanding from scratch."}
 ]},
 {num:"02",label:"EXECUTION MODES",color:"#f59e0b",cmds:[
 {a:"ARTF",n:"Artifact Mode",d:"Produce a clean, deliverable-ready output",p:"Activate Artifact Mode. Produce a clean, complete, standalone deliverable-ready output for:\n\n[DESCRIBE WHAT YOU NEED HERE]\n\nFormat it as a finished product. No commentary, no meta-explanation. Just the artifact itself, ready to use or send."},
-{a:"RDFT",n:"Rapid Draft",d:"Fast first-pass generation, speed over polish",p:"Activate Rapid Draft Mode. Generate a fast first-pass draft of:\n\n[DESCRIBE WHAT YOU NEED HERE]\n\nPrioritize speed and full coverage over polish. I will refine it after. Just get everything on the page. Do not stop to perfect any section. Go."},
+{a:"RDFT",n:"Rapid Draft",d:"Fast first-pass generation, speed over polish",p:"Activate Rapid Draft Mode. Generate a fast first-pass draft of:\n\n[DESCRIBE WHAT YOU NEED HERE]\n\nPrioritize speed and full coverage over polish. I will refine it after. Get everything on the page and do not stop to perfect any section. Close the draft with a short list labeled NEEDS DEPTH flagging the sections that require the most rework. Go."},
 {a:"PREC",n:"Precision Rewrite",d:"Surgical edit of existing copy for maximum clarity",p:"Activate Precision Rewrite Mode. Rewrite this content surgically for maximum clarity, impact, and precision:\n\n[PASTE YOUR CONTENT HERE]\n\nDo not change the core meaning. Cut every redundant word. Sharpen every soft phrase. Make it say more with less."},
-{a:"COMP",n:"Compression",d:"Distill any content to its densest essential form",p:"Activate Compression Mode. Distill this content to its absolute densest, most essential form:\n\n[PASTE YOUR CONTENT HERE]\n\nRemove every filler phrase and non-essential idea. Keep only what cannot be cut without losing meaning. The output should be tight enough to hurt."},
-{a:"EXPD",n:"Expansion",d:"Develop any idea to its fullest expression",p:"Activate Expansion Mode. Take this seed idea and develop it to its fullest, most complete expression:\n\n[PASTE YOUR IDEA OR OUTLINE HERE]\n\nExpand every dimension: reasoning, examples, implications, nuance, application, counter-positions. Leave nothing unexplored."},
+{a:"COMP",n:"Compression",d:"Distill any content to its densest essential form",p:"Activate Compression Mode. Distill this content to its absolute densest, most essential form:\n\n[PASTE YOUR CONTENT HERE]\n\nTarget at least a 50 percent reduction in length, tighter if meaning survives. Remove every filler phrase and non-essential idea. Keep only what cannot be cut without losing meaning. The output should be tight enough to hurt. If 50 percent is not achievable without breaking meaning, state the real floor and deliver that."},
+{a:"EXPD",n:"Expansion",d:"Develop any idea to its fullest expression",p:"Activate Expansion Mode. Take this seed idea and develop it to its fullest, most complete expression:\n\n[PASTE YOUR IDEA OR OUTLINE HERE]\n\nExpand across these dimensions: reasoning, examples, implications, nuance, application, and counter-positions. Cap each dimension at one focused section so the output stays usable. End with a line labeled DEEPER flagging which single dimension deserves a dedicated follow-up pass."},
 {a:"PARI",n:"Parallel Ideation",d:"Generate multiple divergent directions simultaneously",p:"Activate Parallel Ideation Mode. Generate [NUMBER] distinct, divergent directions for this challenge:\n\n[PASTE YOUR CHALLENGE HERE]\n\nEach direction must be genuinely different in angle, approach, or underlying assumption. Give me real range: from safe to bold to unconventional."},
 {a:"SNTH",n:"Synthesis Mode",d:"Fuse disparate ideas into one coherent output",p:"Activate Synthesis Mode. Fuse these multiple ideas, sources, or perspectives into one coherent, unified output:\n\n[PASTE YOUR INPUTS HERE]\n\nIdentify the through-line. Resolve tensions. Strip the redundancy. Produce one integrated result that is stronger than any individual part."}
 ]},
 {num:"03",label:"ANALYSIS MODES",color:"#a78bfa",cmds:[
-{a:"CMPR",n:"Comparative Analysis",d:"Side-by-side evaluation across defined criteria",p:"Activate Comparative Analysis Mode. Conduct a rigorous side-by-side evaluation of:\n\n[LIST YOUR OPTIONS HERE]\n\nDefine the evaluation criteria first, then score each option against them. End with a clear recommendation and the exact reasoning that drives it. No hedging."},
-{a:"DCSN",n:"Decision Matrix",d:"Weighted scoring for multi-variable choices",p:"Activate Decision Matrix Mode. Build a weighted scoring matrix for this decision:\n\n[DESCRIBE THE DECISION AND YOUR OPTIONS HERE]\n\nDefine evaluation criteria, assign weights based on what matters most, score each option, and surface the winning choice. Show scoring so I can challenge the weights if needed."},
-{a:"ROOT",n:"Root Cause",d:"Trace any problem back to its originating failure",p:"Activate Root Cause Mode. Trace this problem back to its originating failure:\n\n[DESCRIBE THE PROBLEM HERE]\n\nDo not stop at symptoms. Keep asking why until we reach the actual root. Give me a full causal chain clearly ordered from effect back to origin."},
-{a:"RISK",n:"Risk Map",d:"Chart probability and impact of every major threat",p:"Activate Risk Map Mode. Chart every major risk associated with this plan:\n\n[PASTE YOUR PLAN OR DECISION HERE]\n\nFor each risk: assess probability and impact, identify early warning signals, and recommend a specific mitigation strategy. Especially surface the risks I have not thought of yet."},
-{a:"CSLV",n:"Constraint Solver",d:"Find the optimal path within hard limitations",p:"Activate Constraint Solver Mode. Find the optimal path to this goal given these hard constraints:\n\nGoal: [STATE YOUR GOAL]\nConstraints: [LIST YOUR CONSTRAINTS - time, budget, resources, rules]\n\nDo not soften or work around the constraints. Work within them. Show me the highest-leverage path that is actually available to me."}
+{a:"CMPR",n:"Comparative Analysis",d:"Side-by-side evaluation across defined criteria",p:"Activate Comparative Analysis Mode. You are an evaluation analyst. Conduct a rigorous side-by-side evaluation of:\n\n[LIST YOUR OPTIONS HERE]\n\nDefine the evaluation criteria first, then score each option against them.\n\nOutput format: first a short list of the criteria and why each matters, then a table with criteria as rows and options as columns showing scores, then a clear recommendation and the exact reasoning that drives it. No hedging."},
+{a:"DCSN",n:"Decision Matrix",d:"Weighted scoring for multi-variable choices",p:"Activate Decision Matrix Mode. You are a decision analyst. Build a weighted scoring matrix for this decision:\n\n[DESCRIBE THE DECISION AND YOUR OPTIONS HERE]\n\nDefine evaluation criteria, assign weights based on what matters most, score each option 1 to 5, and surface the winning choice.\n\nOutput format: a table with columns Criterion, Weight, then one column per option showing raw score and weighted score, with a weighted total row at the bottom. Show all scoring so I can challenge the weights if needed."},
+{a:"ROOT",n:"Root Cause",d:"Trace any problem back to its originating failure",p:"Activate Root Cause Mode. You are a root cause investigator. Trace this problem back to its originating failure:\n\n[DESCRIBE THE PROBLEM HERE]\n\nDo not stop at symptoms. Keep asking why until we reach the actual root. Give me a full causal chain clearly ordered from effect back to origin, with each link stated on its own line."},
+{a:"RISK",n:"Risk Map",d:"Chart probability and impact of every major threat",p:"Activate Risk Map Mode. You are an enterprise risk officer. Chart every major risk associated with this plan:\n\n[PASTE YOUR PLAN OR DECISION HERE]\n\nOutput format: a table with columns Risk, Probability (High/Med/Low), Impact (High/Med/Low), Early Warning Signal, and Mitigation. Sort by severity, highest first. Below the table, add a section labeled BLIND SPOTS surfacing the risks I have not thought of yet."},
+{a:"CSLV",n:"Constraint Solver",d:"Optimal path for a single decision under hard limits",p:"Activate Constraint Solver Mode. This is a single bounded decision, not a project plan. Find the optimal path to this goal given these hard constraints:\n\nGoal: [STATE YOUR GOAL]\nConstraints: [LIST YOUR CONSTRAINTS - time, budget, resources, rules]\n\nDo not soften or work around the constraints. Work within them. Output one recommended path, the two closest alternatives you rejected, and the specific tradeoff that made the winner win."}
 ]},
 {num:"04",label:"IDENTITY AND BRAND MODES",color:"#f472b6",cmds:[
 {a:"BSPN",n:"Brand Spine",d:"Define the core architecture of any brand identity",p:"Activate Brand Spine Mode. Define the complete core architecture of this brand:\n\n[DESCRIBE THE BRAND, PRODUCT, OR PERSON HERE]\n\nBuild the full spine: Purpose, Positioning, Personality, Promise, Proof Points, and Voice. This is the foundation everything else attaches to. Make it precise, differentiated, and ownable."},
 {a:"STYL",n:"Signature Style",d:"Lock in a consistent, distinctive voice and aesthetic",p:"Activate Signature Style Mode. Analyze and codify the distinctive voice and style for:\n\n[DESCRIBE THE BRAND, PERSON, OR BODY OF WORK HERE]\n\nWhat makes it unmistakably itself? Give me the rules that define the signature: the dos, the do nots, the tone markers, the vocabulary patterns, and the structural principles."},
-{a:"MONO",n:"Monogram Logic",d:"Distill identity to its most essential symbolic expression",p:"Activate Monogram Logic Mode. Distill this identity to its most essential, iconic, symbolic expression:\n\n[DESCRIBE THE BRAND OR PERSON HERE]\n\nStrip away everything non-essential. What is the single most concentrated representation that would still communicate the whole if everything else were removed? Define it precisely."}
+{a:"MONO",n:"Monogram Logic",d:"Distill identity to its most essential symbolic expression",p:"Activate Monogram Logic Mode. Distill this identity to its most essential, iconic, symbolic expression:\n\n[DESCRIBE THE BRAND OR PERSON HERE]\n\nDeliver exactly three things:\n1. One symbol or mark concept, described precisely enough for a designer to sketch it.\n2. One tagline of six words or fewer.\n3. One visual metaphor that captures the whole identity.\n\nFor each, give one line of rationale explaining why it would still communicate the identity if everything else were stripped away. No abstractions without a concrete deliverable attached."}
 ]},
 {num:"05",label:"LEARNING MODES",color:"#34d399",cmds:[
 {a:"MMAP",n:"Mastery Map",d:"Build the complete learning roadmap for any domain",p:"Activate Mastery Map Mode. Build the complete learning roadmap for:\n\n[NAME THE SKILL OR DOMAIN HERE]\n\nDefine the stages from beginner to mastery. Map the key milestones, the most important resources at each stage, the mental models that unlock the next level, and the common traps that stall learners."},
@@ -135,97 +286,410 @@ const CATS=[
 {a:"ELI5",n:"Explain Like I Am Five",d:"Radical simplicity, core concept only",p:"Activate ELI5 Mode. Explain this using radical simplicity:\n\nTopic: [STATE YOUR TOPIC HERE]\n\nNo jargon. No assumed knowledge. Just the core concept in the plainest possible language. If a useful analogy exists that a child would understand intuitively, lead with it. One truth, clearly told."}
 ]},
 {num:"06",label:"SYSTEM AND WORKFLOW MODES",color:"#60a5fa",cmds:[
-{a:"WFLA",n:"Workflow Architect",d:"Design complete end-to-end process for any project",p:"Activate Workflow Architect Mode. Design the complete end-to-end workflow for:\n\n[DESCRIBE THE PROJECT OR PROCESS HERE]\n\nMap every phase. Identify the key handoffs. Flag the bottlenecks. Define the decision points. Give me a repeatable, documented system I can run without reinventing it every time."},
-{a:"CPLX",n:"Constraint Planning",d:"Build the best plan within real-world limitations",p:"Activate Constraint Planning Mode. Build the best possible plan for this goal given hard constraints:\n\nGoal: [STATE YOUR GOAL]\nConstraints: [LIST EVERY REAL CONSTRAINT - time, money, people, rules, energy]\n\nWork within the constraints, not around them. Show me the highest-leverage path I can actually execute."},
-{a:"FAIL",n:"Failure Proofing",d:"Pre-mortem every failure mode before execution",p:"Activate Failure Proofing Mode. Run a pre-mortem on this plan:\n\n[PASTE YOUR PLAN HERE]\n\nAssume it has already failed. Work backward: what went wrong? Identify the top failure modes ranked by likelihood and the specific preventive actions that would have stopped each one."},
+{a:"WFLA",n:"Workflow Architect",d:"Design complete end-to-end process for any project",p:"Activate Workflow Architect Mode. You are a process architect. Design the complete end-to-end workflow for:\n\n[DESCRIBE THE PROJECT OR PROCESS HERE]\n\nMap every phase. Identify the key handoffs. Flag the bottlenecks. Define the decision points. Give me a repeatable, documented system I can run without reinventing it every time."},
+{a:"CPLX",n:"Constraint Planning",d:"Multi-phase plan sequenced within real-world limits",p:"Activate Constraint Planning Mode. This is a multi-phase plan, not a single decision. Build the best possible sequenced plan for this goal given hard constraints:\n\nGoal: [STATE YOUR GOAL]\nConstraints: [LIST EVERY REAL CONSTRAINT - time, money, people, rules, energy]\n\nWork within the constraints, not around them. Output the plan as ordered phases, each with its objective, the constraint that shapes it most, its exit criteria, and what unlocks the next phase. Flag the phase most likely to slip and why."},
+{a:"FAIL",n:"Failure Proofing",d:"Pre-mortem every failure mode before execution",p:"Activate Failure Proofing Mode. You are a pre-mortem facilitator. Run a pre-mortem on this plan:\n\n[PASTE YOUR PLAN HERE]\n\nAssume it has already failed. Work backward: what went wrong? Identify the top failure modes ranked by likelihood and the specific preventive actions that would have stopped each one."},
 {a:"TRIG",n:"Trigger System",d:"Design automatic if-then rules that fire without thinking",p:"Activate Trigger System Mode. Design an if-then trigger system for:\n\n[DESCRIBE THE BEHAVIOR, WORKFLOW, OR GOAL HERE]\n\nBuild automatic rules that fire without conscious decision-making. I want a system that runs itself once the triggers are in place. Not intentions, not reminders, but hard-wired conditions and responses."},
-{a:"TBOX",n:"Time Boxing",d:"Allocate fixed time blocks to bounded, focused output",p:"Activate Time Boxing Mode. Break this project into bounded, focused time blocks:\n\n[DESCRIBE WHAT YOU ARE WORKING ON HERE]\n\nAssign realistic time allocations to each component. Sequence them logically. Flag any blocks that are likely to overrun and suggest how to handle overruns without derailing the whole sequence."},
-{a:"PSTK",n:"Priority Stack",d:"Rank every task by impact, urgency, and energy cost",p:"Activate Priority Stack Mode. Rank these tasks by impact, urgency, and energy cost:\n\n[LIST YOUR TASKS HERE]\n\nGive me a clear, numbered execution order. Eliminate anything that should not be on this list at all. I want the stack I should actually run, not the one that feels safe to include."}
+{a:"TBOX",n:"Time Boxing",d:"Allocate fixed time blocks to bounded, focused output",p:"Activate Time Boxing Mode. Break this project into bounded, focused time blocks:\n\n[DESCRIBE WHAT YOU ARE WORKING ON HERE]\n\nOutput format: a table with columns Block, Duration, Sequence Order, and Overrun Risk (High/Med/Low). Below the table, for every block flagged High, state how to handle the overrun without derailing the whole sequence."},
+{a:"PSTK",n:"Priority Stack",d:"Rank every task by impact, urgency, and energy cost",p:"Activate Priority Stack Mode. Rank these tasks by impact, urgency, and energy cost:\n\n[LIST YOUR TASKS HERE]\n\nOutput format: a numbered execution order, each line showing the task followed by its Impact, Urgency, and Energy ratings (High/Med/Low). Then a section labeled CUT listing anything that should not be on this list at all and why. I want the stack I should actually run, not the one that feels safe to include."}
 ]},
 {num:"07",label:"CONVERSATION CONTROL MODES",color:"#fb923c",cmds:[
-{a:"MDSW",n:"Mode Switch",d:"Instantly shift to a different operating mode",p:"Switch to [MODE NAME] Mode immediately. We are now operating in that framework for the rest of this conversation unless I explicitly say otherwise. Acknowledge the switch and begin."},
-{a:"PUSH",n:"Pushback Mode",d:"Smarty challenges your position with critical friction",p:"Activate Pushback Mode. Challenge my thinking on this:\n\n[STATE YOUR POSITION OR PLAN HERE]\n\nI want genuine critical friction, not validation. Push back hard. Find the flaws. Identify what I am not seeing. Do not let me off easy. I need real resistance, not agreement dressed as feedback."},
-{a:"NOSY",n:"No Sycophant Mode",d:"Zero validation bias, raw honest assessment only",p:"Activate No Sycophant Mode. For the rest of this conversation: zero validation bias. No affirmations. No softening. No cushioning.\n\nRaw honest assessment only. If I am wrong, say I am wrong. If my idea is weak, say so specifically. Directness only. Activate now."},
-{a:"TONE",n:"Precision Tone",d:"Lock response style to an exact register",p:"Activate Precision Tone. Lock the register to:\n\n[DESCRIBE THE EXACT TONE - e.g. executive briefing, technical documentation, investor pitch, Socratic dialogue, academic analysis]\n\nMatch the vocabulary, sentence structure, level of formality, and rhythm precisely. Stay in that register throughout the conversation."},
-{a:"CSCR",n:"Confidence Score",d:"Every output tagged with an explicit certainty rating",p:"Activate Confidence Score Mode. For every factual claim or recommendation you make in this conversation, append an explicit confidence rating:\n\n[HIGH / MEDIUM / LOW] followed by a one-line reason for that rating.\n\nI need to know how certain you are, not just what you think. Apply this consistently throughout the conversation."}
+{a:"MDSW",n:"Mode Switch",d:"Shift the conversation into a mode you supply in full",p:"Mode Switch. The AI has no knowledge of my command library, so I am supplying the full mode definition below. From this point forward, operate entirely within this framework for the rest of the conversation unless I explicitly say otherwise:\n\n[PASTE THE FULL PROMPT OF THE TARGET MODE HERE]\n\nAcknowledge the switch in one line and begin. Note: naming a mode without pasting its full prompt only works if that mode was already activated earlier in this same conversation."},
+{a:"PUSH",n:"Pushback Mode",d:"Standing critical friction on everything you say",p:"Activate Pushback Mode. This is a standing instruction for the rest of this conversation, not a one-time critique. Challenge every claim, plan, and position I state from this point forward.\n\nStarting position: [STATE YOUR CURRENT POSITION OR PLAN HERE]\n\nI want genuine critical friction, not validation. Push back hard. Find the flaws. Identify what I am not seeing. Do not let me off easy on this message or any message after it. If a later claim of mine is solid, say so in one line and move on, but earn it first."+REINFORCE},
+{a:"NOSY",n:"No Sycophant Mode",d:"Zero validation bias, raw honest assessment only",p:"Activate No Sycophant Mode. For the rest of this conversation: zero validation bias. No affirmations. No softening. No cushioning.\n\nRaw honest assessment only. If I am wrong, say I am wrong. If my idea is weak, say so specifically. Directness only. Activate now."+REINFORCE},
+{a:"TONE",n:"Precision Tone",d:"Lock response style to an exact register",p:"Activate Precision Tone. Lock the register to:\n\n[DESCRIBE THE EXACT TONE - e.g. executive briefing, technical documentation, investor pitch, Socratic dialogue, academic analysis]\n\nMatch the vocabulary, sentence structure, level of formality, and rhythm precisely. Stay in that register throughout the conversation."+REINFORCE},
+{a:"CSCR",n:"Confidence Score",d:"Every output tagged with an explicit certainty rating",p:"Activate Confidence Score Mode. For every factual claim or recommendation you make in this conversation, append an explicit confidence rating:\n\n[HIGH / MEDIUM / LOW] followed by a one-line reason for that rating.\n\nI need to know how certain you are, not just what you think. Apply this consistently throughout the conversation."+REINFORCE}
 ]},
 {num:"08",label:"TK SPECIFIC ENHANCEMENTS",color:"#e879f9",cmds:[
-{a:"ACR",n:"Acronym Expansion",d:"Every acronym defined on first use, no exceptions",p:"Acronym Expansion Protocol is now active. For this entire conversation: define every acronym on first use, no exceptions, even common ones. If I use an acronym without defining it, ask me to clarify before proceeding. This runs in the background for all responses."},
-{a:"TKQA",n:"TK QA Protocol",d:"Output reviewed against TK quality standards",p:"TK QA Protocol is now active. Before delivering any output in this conversation, review it against these standards:\n\n1. Is it complete? Nothing left out.\n2. Is it precise? No vague language.\n3. Is it actionable? Can I do something with this?\n4. Does it answer what was actually asked?\n\nIf any check fails, fix the output before responding. Confirm protocol is active."},
-{a:"FULL",n:"Full Stack Responses",d:"Complete answers only, no fragmented outputs",p:"Full Stack Responses mode is now active. For this entire conversation: do not give me partial answers, truncated outputs, or let me know if you want more. Every response must be complete and self-contained. If the answer requires length, give me the length. Confirm this is active."},
-{a:"DAT",n:"Direct Analytical Tone",d:"Structured, precise, no padding or filler",p:"Direct Analytical Tone is now active. For this entire conversation: no padding, no filler, no unnecessary affirmations, no transitional fluff. Lead with the answer. Support with evidence. Close with the implication. Structured, precise, efficient. Activate and confirm."},
-{a:"BPV",n:"Business Professional Voice",d:"Executive-grade communication register at all times",p:"Business Professional Voice is now active. All responses in this conversation operate at an executive-grade communication register: clear, authoritative, appropriately formal, and results-oriented. No casual language. No unnecessary hedging. No excessive qualifiers. Confirm and begin."}
+{a:"ACR",n:"Acronym Expansion",d:"Every acronym defined on first use, no exceptions",p:"Acronym Expansion Protocol is now active. For this entire conversation: define every acronym on first use, no exceptions, even common ones. If I use an acronym without defining it, ask me to clarify before proceeding. This runs in the background for all responses."+REINFORCE},
+{a:"TKQA",n:"TK QA Protocol",d:"Output reviewed against TK quality standards",p:"TK QA Protocol is now active. Before delivering any output in this conversation, review it against these standards:\n\n1. Is it complete? Nothing left out.\n2. Is it precise? No vague language.\n3. Is it actionable? Can I do something with this?\n4. Does it answer what was actually asked?\n\nIf any check fails, fix the output before responding. Confirm protocol is active."+REINFORCE},
+{a:"FULL",n:"Full Stack Responses",d:"Complete answers only, no fragmented outputs",p:"Full Stack Responses mode is now active. For this entire conversation: do not give me partial answers, truncated outputs, or let me know if you want more. Every response must be complete and self-contained. If the answer requires length, give me the length. Confirm this is active."+REINFORCE},
+{a:"DAT",n:"Direct Analytical Tone",d:"Structured, precise, no padding or filler",p:"Direct Analytical Tone is now active. For this entire conversation: no padding, no filler, no unnecessary affirmations, no transitional fluff. Lead with the answer. Support with evidence. Close with the implication. Structured, precise, efficient. Activate and confirm."+REINFORCE},
+{a:"BPV",n:"Business Professional Voice",d:"Executive-grade communication register at all times",p:"Business Professional Voice is now active. All responses in this conversation operate at an executive-grade communication register: clear, authoritative, appropriately formal, and results-oriented. No casual language. No unnecessary hedging. No excessive qualifiers. Confirm and begin."+REINFORCE}
 ]},
 {num:"09",label:"META CHEAT CODES",color:"#fbbf24",cmds:[
 {a:"CHED",n:"Cheat Code Surfacing",d:"Surface hidden shortcuts and leverage points",p:"Activate Cheat Code Surfacing Mode. For this topic or challenge:\n\n[DESCRIBE IT HERE]\n\nSurface every non-obvious shortcut, leverage point, hidden advantage, and underused strategy that most people miss. I want the moves that are not in the standard playbook, the insider game, not the beginner guide."},
 {a:"RBLD",n:"Prompt Rebuild",d:"Deconstruct and reconstruct any prompt for maximum power",p:"Activate Prompt Rebuild Mode. Take this prompt and rebuild it for maximum power and precision:\n\n[PASTE YOUR PROMPT HERE]\n\nDeconstruct what it is actually asking. Identify what is missing, ambiguous, or weak. Then reconstruct it as the version of this prompt that will get the best possible output. Show me both the diagnosis and the rebuilt version."},
-{a:"IDOP",n:"Identity Optimization",d:"Redesign how you show up, presence, brand, narrative",p:"Activate Identity Optimization Mode. I want to redesign how I show up in:\n\n[DESCRIBE THE CONTEXT - professional, social, online, leadership]\n\nAnalyze my current presence, brand, and narrative. Identify what is working, what is undermining me, and what is missing. Then give me a specific upgrade plan."},
+{a:"IDOP",n:"Identity Optimization",d:"Redesign how you show up, presence, brand, narrative",p:"Activate Identity Optimization Mode. I want to redesign how I show up in:\n\nContext: [DESCRIBE THE CONTEXT - professional, social, online, leadership]\n\nMy actual current materials: [PASTE YOUR CURRENT BIO, LINKEDIN SUMMARY, RESUME EXCERPT, OR OTHER REAL MATERIAL HERE]\n\nAnalyze only what I have provided. Do not invent a presence I did not describe. Identify what is working, what is undermining me, and what is missing. Then give me a specific upgrade plan tied to the material above."},
 {a:"OS",n:"Operating System Design",d:"Architect the complete ruleset for how you run your life",p:"Activate Operating System Design Mode. Help me architect the complete ruleset for how I run my life:\n\nArea of focus: [SPECIFY - productivity, relationships, health, career, finances]\n\nDesign the principles, rules, defaults, and decision frameworks I will operate from. Make it a real system, not a list of intentions."},
 {a:"UPGD",n:"Upgrade My Thinking",d:"Identify and eliminate cognitive bottlenecks",p:"Activate Upgrade My Thinking Mode. Identify and eliminate the cognitive bottlenecks in my reasoning about:\n\n[DESCRIBE THE TOPIC OR CHALLENGE HERE]\n\nWhat mental models am I missing? What biases are likely distorting my view? What frameworks would make me significantly sharper on this? Give me the actual upgrade, not the theory."},
-{a:"ALFE",n:"Architect My Life",d:"Full blueprint for the life you are building",p:"Activate Architect My Life Mode. Help me build a full blueprint for the life I am designing:\n\nFocus area: [SPECIFY - 1 year, 5 year, specific domain, or full life design]\nCurrent situation: [BRIEF DESCRIPTION]\nCore goals: [LIST YOUR 3 TO 5 MOST IMPORTANT GOALS]\n\nGive me structure, sequence, and the key decisions that will determine the trajectory."},
+{a:"ALFE",n:"Architect My Life",d:"Full blueprint for the life you are building",p:"Activate Architect My Life Mode. Help me build a full blueprint for the life I am designing:\n\nFocus area: [SPECIFY - 1 year, 5 year, specific domain, or full life design]\nCurrent situation: [DESCRIBE YOUR ACTUAL CURRENT SITUATION IN 3 TO 5 CONCRETE FACTS]\nCore goals: [LIST YOUR 3 TO 5 MOST IMPORTANT GOALS]\n\nWork only from the facts I provide. Give me structure, sequence, and the key decisions that will determine the trajectory."},
 {a:"RWR",n:"Rewire My Defaults",d:"Replace inherited habits and patterns with designed ones",p:"Activate Rewire My Defaults Mode. I want to replace this inherited habit or pattern with a designed one:\n\nCurrent default: [DESCRIBE THE PATTERN YOU WANT TO REPLACE]\nDesired default: [DESCRIBE WHAT YOU WANT INSTEAD]\n\nDesign the complete rewiring protocol: trigger identification, replacement behavior, reinforcement system, and failure recovery plan."}
 ]}
 ];
-let cur=null;
-function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-function build(){
-  const main=document.getElementById("main");
-  CATS.forEach(cat=>{
-    const sec=document.createElement("div");
-    sec.className="cat";
-    const cards=cat.cmds.map((c,i)=>{
-      const id=cat.num+"_"+i;
-      return`<div class="card" style="--c:${cat.color}" data-id="${id}" data-n="${c.n.toLowerCase()}" data-a="${c.a.toLowerCase()}" data-d="${esc(c.d.toLowerCase())}" data-cat="${cat.label.toLowerCase()}" onclick="open2('${id}')"><div class="ci">${esc(c.a)}</div><div class="nm">${esc(c.n)}</div><div class="ds">${esc(c.d)}</div></div>`;
-    }).join("");
-    sec.innerHTML=`<div class="ch"><div class="cn">${cat.num}</div><div class="ct" style="color:${cat.color}">${cat.label}</div><div class="cl"></div><span style="font-size:10px;color:#6b7fa3">${cat.cmds.length}</span></div><div class="grid">${cards}</div>`;
-    main.appendChild(sec);
-  });
+
+// ---------- storage ----------
+function store(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+let favs=new Set(load("tk_favs",[]));
+let recent=load("tk_recent",[]);
+let counts=load("tk_counts",{});
+let notes=load("tk_notes",{});
+let customs=load("tk_custom",[]);
+
+// ---------- merged data ----------
+let IDX={},cur=null,comboMode=false,combo=[],sortMode="cat",kIdx=-1;
+const SORTS=["cat","alpha","used"],SORTLBL={cat:"CATEGORY",alpha:"A-Z",used:"MOST USED"};
+function hexA(hex,a){return hex+a}
+function mergedCats(){
+  return CATS.map(cat=>({...cat,cmds:[...cat.cmds,...customs.filter(c=>c.cat===cat.num).map(c=>({...c,custom:true}))]}));
 }
-function open2(id){
-  const[cn,ci]=id.split("_");
-  const cat=CATS.find(c=>c.num===cn);
-  if(!cat)return;
-  const cmd=cat.cmds[+ci];
-  if(!cmd)return;
-  cur=cmd;
-  document.getElementById("mTag").textContent=cat.label+" MODE";
-  const mn=document.getElementById("mName");
-  mn.textContent=cmd.n;mn.style.color=cat.color;
-  document.getElementById("mDesc").textContent=cmd.d;
-  const pb=document.getElementById("mPrompt");
-  pb.innerHTML="";
-  cmd.p.split("\n").forEach((ln,i,arr)=>{
-    ln.split(/\[([^\]]+)\]/g).forEach((p,pi)=>{
-      if(pi%2===1){const s=document.createElement("span");s.className="ph";s.textContent="["+p+"]";pb.appendChild(s);}
-      else if(p)pb.appendChild(document.createTextNode(p));
+function rebuildIdx(){
+  IDX={};
+  mergedCats().forEach(cat=>cat.cmds.forEach(c=>IDX[c.a]={cat,cmd:c}));
+}
+function allCmds(){return Object.keys(IDX).sort().map(a=>IDX[a])}
+
+// ---------- build ----------
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function hi(text,q){
+  const e=esc(text);
+  if(!q)return e;
+  const low=text.toLowerCase();let out="",i=0;
+  while(true){
+    const j=low.indexOf(q,i);
+    if(j===-1){out+=esc(text.slice(i));break;}
+    out+=esc(text.slice(i,j))+"<mark>"+esc(text.slice(j,j+q.length))+"</mark>";
+    i=j+q.length;
+  }
+  return out;
+}
+function cardHTML(cat,c){
+  const f=favs.has(c.a)?" fav":"";
+  const tag=c.custom?`<div class="custag">CUSTOM</div>`:"";
+  return `<div class="card" style="--c:${cat.color};--cg:${hexA(cat.color,"1c")};--cg2:${hexA(cat.color,"55")}" data-a="${c.a}" onclick="cardClick('${c.a}')">`+
+    `<div class="star${f}" onclick="event.stopPropagation();toggleFav('${c.a}')" title="Pin to favorites">&#9733;</div>`+
+    `<div class="ci">${esc(c.a)}</div><div class="nm">${esc(c.n)}</div><div class="ds">${esc(c.d)}</div>${tag}</div>`;
+}
+function sectionHTML(id,tagTxt,title,color,cards,count){
+  return `<div class="ch" onclick="toggleCat(this)"><span class="chev">&#9662;</span><div class="cn">${tagTxt}</div><div class="ct" style="color:${color}">${title}</div><div class="cl"></div><span class="cc">${count}</span></div><div class="grid">${cards}</div>`;
+}
+function build(){
+  rebuildIdx();
+  const main=document.getElementById("main");
+  main.innerHTML="";
+  document.getElementById("cCount").textContent=Object.keys(IDX).length;
+  if(sortMode==="cat"){
+    if(favs.size){
+      const sec=document.createElement("div");sec.className="cat";
+      const cards=[...favs].filter(a=>IDX[a]).map(a=>cardHTML(IDX[a].cat,IDX[a].cmd)).join("");
+      sec.innerHTML=sectionHTML("pinned","&#9733;","PINNED","#fbbf24",cards,favs.size);
+      main.appendChild(sec);
+    }
+    mergedCats().forEach(cat=>{
+      const sec=document.createElement("div");sec.className="cat";
+      const cards=cat.cmds.map(c=>cardHTML(cat,c)).join("");
+      sec.innerHTML=sectionHTML(cat.num,cat.num,cat.label,cat.color,cards,cat.cmds.length);
+      main.appendChild(sec);
     });
-    if(i<arr.length-1)pb.appendChild(document.createTextNode("\n"));
-  });
+  }else{
+    let list=allCmds();
+    if(sortMode==="alpha")list.sort((x,y)=>x.cmd.n.localeCompare(y.cmd.n));
+    else list.sort((x,y)=>((counts[y.cmd.a]||0)-(counts[x.cmd.a]||0))||x.cmd.n.localeCompare(y.cmd.n));
+    const sec=document.createElement("div");sec.className="cat";
+    const cards=list.map(e=>cardHTML(e.cat,e.cmd)).join("");
+    sec.innerHTML=sectionHTML("flat","&#9776;",sortMode==="alpha"?"ALL COMMANDS A-Z":"BY USAGE","#a5b4fc",cards,list.length);
+    main.appendChild(sec);
+  }
+  buildChips();renderRecent();renderHeat();renderCotd();doFilter();
+}
+let activeCat="ALL";
+function buildChips(){
+  const box=document.getElementById("chips");
+  const chips=[{label:"ALL",color:"#a5b4fc"},...CATS.map(c=>({label:c.label,color:c.color}))];
+  box.innerHTML=chips.map(c=>`<div class="chip${activeCat===c.label?" on":""}" style="--c:${c.color};--cg:${hexA(c.color,"33")}" onclick="setCat('${c.label}')">${c.label}</div>`).join("");
+}
+function setCat(l){activeCat=activeCat===l?"ALL":l;buildChips();doFilter()}
+function renderRecent(){
+  const box=document.getElementById("recent");
+  const items=recent.filter(a=>IDX[a]);
+  if(!items.length){box.className="recent";box.innerHTML="";return;}
+  box.className="recent show";
+  box.innerHTML=`<span class="rlbl">RECENT:</span>`+items.map(a=>`<span class="rchip" style="color:${IDX[a].cat.color}" onclick="open2('${a}')">${a}</span>`).join("");
+}
+function renderHeat(){
+  const box=document.getElementById("heat");
+  const top=Object.entries(counts).filter(([a])=>IDX[a]).sort((x,y)=>y[1]-x[1]).slice(0,5);
+  if(!top.length){box.className="heat";box.innerHTML="";return;}
+  const max=top[0][1];
+  box.className="heat show";
+  box.innerHTML=`<span class="rlbl">MOST USED:</span>`+top.map(([a,n])=>`<span class="hbar" style="color:${IDX[a].cat.color}" onclick="open2('${a}')">${a}<span class="hb" style="width:${Math.max(10,Math.round(n/max*46))}px"></span><span class="hn">${n}</span></span>`).join("");
+}
+function renderCotd(){
+  const list=Object.keys(IDX).sort();
+  const a=list[Math.floor(Date.now()/86400000)%list.length];
+  const el=document.getElementById("cotd");
+  el.style.setProperty("--dc",IDX[a].cat.color);
+  document.getElementById("cotdName").textContent=a+" \u00b7 "+IDX[a].cmd.n;
+  el.onclick=()=>open2(a);
+}
+
+// ---------- favorites / recent / counts ----------
+function toggleFav(a){favs.has(a)?favs.delete(a):favs.add(a);store("tk_favs",[...favs]);build()}
+function pushRecent(a){recent=[a,...recent.filter(x=>x!==a)].slice(0,5);store("tk_recent",recent);renderRecent()}
+function bumpCount(a){if(!a||a.includes("+"))return;counts[a]=(counts[a]||0)+1;store("tk_counts",counts);renderHeat()}
+
+// ---------- collapse / density / sort ----------
+function toggleCat(h){h.parentElement.classList.toggle("closed")}
+let allClosed=false;
+function toggleAll(){allClosed=!allClosed;document.querySelectorAll(".cat").forEach(c=>c.classList.toggle("closed",allClosed))}
+function toggleDensity(){document.body.classList.toggle("compact");document.getElementById("denBtn").classList.toggle("on")}
+function cycleSort(){
+  sortMode=SORTS[(SORTS.indexOf(sortMode)+1)%SORTS.length];
+  document.getElementById("sortBtn").textContent="SORT: "+SORTLBL[sortMode];
+  build();
+}
+
+// ---------- modal ----------
+function cardClick(a){comboMode?comboToggle(a):open2(a)}
+function setModalColor(color){
+  const box=document.getElementById("mBox");
+  box.style.setProperty("--mc",color);
+  box.style.setProperty("--mg",hexA(color,"22"));
+  document.getElementById("copyBtn").style.setProperty("--pc",color);
+}
+function open2(a){
+  const e=IDX[a];if(!e)return;
+  cur=e.cmd;
+  document.getElementById("mTag").textContent=e.cat.label+(e.cmd.custom?" \u00b7 CUSTOM":"")+" MODE";
+  const mn=document.getElementById("mName");
+  mn.textContent=e.cmd.n;mn.style.color=e.cat.color;
+  document.getElementById("mDesc").textContent=e.cmd.d;
+  setModalColor(e.cat.color);
+  renderPrompt(e.cmd.p);
+  document.getElementById("mHint").style.display=e.cmd.p.includes("[")?"":"none";
+  document.getElementById("nLbl").style.display="";
+  const nt=document.getElementById("mNotes");
+  nt.style.display="";nt.value=notes[a]||"";
+  document.getElementById("delBtn").style.display=e.cmd.custom?"":"none";
   document.getElementById("cpd").classList.remove("show");
   document.getElementById("ov").classList.add("open");
   document.body.style.overflow="hidden";
+  try{if(location.hash!=="#"+a)history.replaceState(null,"","#"+a);}catch(err){}
 }
-function closeModal(){document.getElementById("ov").classList.remove("open");document.body.style.overflow="";}
-function handleOv(e){if(e.target===document.getElementById("ov"))closeModal();}
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
-function getP(){return cur?cur.p:"";}
-function copyOnly(){navigator.clipboard.writeText(getP()).then(()=>{document.getElementById("cpd").classList.add("show");toast();}).catch(fb);}
-function fb(){const ta=document.createElement("textarea");ta.value=getP();ta.style.cssText="position:fixed;opacity:0";document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);document.getElementById("cpd").classList.add("show");toast();}
-function toast(){const t=document.getElementById("toast");t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200);}
+function renderPrompt(p){
+  const pb=document.getElementById("mPrompt");
+  pb.innerHTML="";
+  p.split("\n").forEach((ln,i,arr)=>{
+    ln.split(/\[([^\]]+)\]/g).forEach((seg,si)=>{
+      if(si%2===1){
+        const inp=document.createElement("input");
+        inp.className="phi";inp.type="text";
+        inp.placeholder=seg;inp.dataset.ph=seg;
+        inp.size=Math.min(Math.max(seg.length,14),60);
+        pb.appendChild(inp);
+      }else if(seg)pb.appendChild(document.createTextNode(seg));
+    });
+    if(i<arr.length-1)pb.appendChild(document.createTextNode("\n"));
+  });
+}
+function closeModal(){
+  document.getElementById("ov").classList.remove("open");
+  document.body.style.overflow="";
+  cur=null;
+  try{history.replaceState(null,"",location.pathname+location.search);}catch(err){}
+}
+function handleOv(e,id){if(e.target===document.getElementById(id))(id==="ov"?closeModal:closeBuilder)()}
+
+// ---------- notes ----------
+function saveNote(){
+  if(!cur||cur.a.includes("+"))return;
+  const v=document.getElementById("mNotes").value;
+  if(v.trim())notes[cur.a]=v;else delete notes[cur.a];
+  store("tk_notes",notes);
+}
+
+// ---------- copy ----------
+function getFilled(){
+  let out="";
+  document.getElementById("mPrompt").childNodes.forEach(n=>{
+    if(n.nodeType===3)out+=n.textContent;
+    else if(n.classList&&n.classList.contains("phi"))out+=n.value.trim()?n.value.trim():"["+n.dataset.ph+"]";
+  });
+  return out;
+}
+function doCopy(text,msg,color){
+  const done=()=>{document.getElementById("cpd").classList.add("show");toast(msg,color)};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>fbCopy(text,done));
+  }else fbCopy(text,done);
+}
+function fbCopy(text,done){
+  const ta=document.createElement("textarea");
+  ta.value=text;ta.style.cssText="position:fixed;opacity:0";
+  document.body.appendChild(ta);ta.select();
+  document.execCommand("copy");document.body.removeChild(ta);done();
+}
+function copyFilled(){
+  if(!cur)return;
+  const color=cur.a.includes("+")?"#00d4ff":IDX[cur.a].cat.color;
+  doCopy(getFilled(),"Prompt copied",color);
+  const b=document.getElementById("copyBtn");
+  b.classList.remove("pulse");void b.offsetWidth;b.classList.add("pulse");
+  if(!cur.a.includes("+")){pushRecent(cur.a);bumpCount(cur.a);}
+}
+function copyLink(){if(!cur||cur.a.includes("+"))return;doCopy(location.origin+location.pathname+"#"+cur.a,"Link copied",IDX[cur.a].cat.color)}
+function toast(msg,color){
+  const t=document.getElementById("toast");
+  t.textContent=msg||"Copied to clipboard";
+  t.style.setProperty("--tc",color||"#00d4ff");
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+// ---------- search + chips filter ----------
 function doFilter(){
   const q=document.getElementById("srch").value.toLowerCase().trim();
   let any=false;
-  document.querySelectorAll(".card").forEach(c=>{
-    const show=!q||c.dataset.n.includes(q)||c.dataset.a.includes(q)||c.dataset.d.includes(q)||c.dataset.cat.includes(q);
-    c.style.display=show?"":"none";
-    if(show)any=true;
+  document.querySelectorAll(".card").forEach(el=>{
+    const a=el.dataset.a,e=IDX[a];
+    if(!e){el.style.display="none";return;}
+    const hay=(e.cmd.n+" "+e.cmd.a+" "+e.cmd.d+" "+e.cat.label+" "+e.cmd.p).toLowerCase();
+    const show=(!q||hay.includes(q))&&(activeCat==="ALL"||e.cat.label===activeCat);
+    el.style.display=show?"":"none";
+    if(show){
+      any=true;
+      el.querySelector(".nm").innerHTML=hi(e.cmd.n,q);
+      el.querySelector(".ds").innerHTML=hi(e.cmd.d,q);
+    }
   });
   document.querySelectorAll(".cat").forEach(s=>{
     s.style.display=[...s.querySelectorAll(".card")].some(c=>c.style.display!=="none")?"":"none";
   });
   document.getElementById("nr").className="nr"+(any?"":" show");
+  kIdx=-1;markK();
 }
+
+// ---------- keyboard navigation ----------
+function visCards(){return [...document.querySelectorAll(".card")].filter(c=>c.style.display!=="none"&&c.offsetParent!==null)}
+function markK(){
+  document.querySelectorAll(".card.kfocus").forEach(c=>c.classList.remove("kfocus"));
+  const v=visCards();
+  if(kIdx>=0&&kIdx<v.length){v[kIdx].classList.add("kfocus");v[kIdx].scrollIntoView({block:"nearest"})}
+}
+document.addEventListener("keydown",e=>{
+  const tag=document.activeElement.tagName;
+  const typing=tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT";
+  if(e.key==="Escape"){closeModal();closeBuilder();return;}
+  if(typing)return;
+  if(e.key==="/"){e.preventDefault();document.getElementById("srch").focus();return;}
+  const modalOpen=document.getElementById("ov").classList.contains("open");
+  if(modalOpen){
+    if(e.key.toLowerCase()==="c"){e.preventDefault();copyFilled();}
+    return;
+  }
+  const v=visCards();if(!v.length)return;
+  if(e.key==="ArrowRight"||e.key==="ArrowDown"){e.preventDefault();kIdx=Math.min(kIdx+1,v.length-1);markK();}
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"){e.preventDefault();kIdx=Math.max(kIdx-1,0);markK();}
+  else if(e.key==="Enter"&&kIdx>=0){e.preventDefault();cardClick(v[kIdx].dataset.a);}
+});
+
+// ---------- combo builder ----------
+function toggleCombo(){
+  comboMode=!comboMode;
+  document.getElementById("comboBtn").classList.toggle("on",comboMode);
+  document.getElementById("tray").classList.toggle("show",comboMode);
+  if(!comboMode){combo=[];renderCombo();document.querySelectorAll(".card.insel").forEach(c=>c.classList.remove("insel"));}
+  toast(comboMode?"Combo mode: tap cards to stack modes":"Combo mode off");
+}
+function comboToggle(a){
+  if(combo.includes(a))combo=combo.filter(x=>x!==a);
+  else if(combo.length<3)combo.push(a);
+  else{toast("Max 3 modes per stack");return;}
+  document.querySelectorAll(`.card[data-a="${a}"]`).forEach(c=>c.classList.toggle("insel",combo.includes(a)));
+  renderCombo();
+}
+function renderCombo(){
+  const box=document.getElementById("tchips");
+  box.innerHTML=combo.map(a=>`<div class="tchip" style="color:${IDX[a].cat.color}">${a}<span onclick="comboToggle('${a}')">&#10005;</span></div>`).join("")||`<span style="font-size:11px;color:#6b7fa3">Tap up to 3 cards to stack their modes into one prompt.</span>`;
+  document.getElementById("tgen").disabled=combo.length<2;
+}
+function genCombo(){
+  if(combo.length<2)return;
+  const names=combo.map(a=>IDX[a].cmd.n).join(" + ");
+  const body="You will operate in "+combo.length+" stacked modes simultaneously for this task. Apply all of them together. Where they conflict, state the conflict and resolve it in favor of accuracy over style.\n\n"+combo.map((a,i)=>"MODE "+(i+1)+": "+IDX[a].cmd.n.toUpperCase()+"\n"+IDX[a].cmd.p).join("\n\n---\n\n");
+  cur={a:combo.join("+"),n:names,d:"Stacked combo prompt: "+names,p:body};
+  document.getElementById("mTag").textContent="COMBO STACK";
+  const mn=document.getElementById("mName");
+  mn.textContent=names;mn.style.color="#00d4ff";
+  document.getElementById("mDesc").textContent=cur.d;
+  setModalColor("#00d4ff");
+  renderPrompt(body);
+  document.getElementById("mHint").style.display="";
+  document.getElementById("nLbl").style.display="none";
+  document.getElementById("mNotes").style.display="none";
+  document.getElementById("delBtn").style.display="none";
+  document.getElementById("cpd").classList.remove("show");
+  document.getElementById("ov").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+
+// ---------- custom command builder ----------
+function openBuilder(){
+  const sel=document.getElementById("bCat");
+  sel.innerHTML=CATS.map(c=>`<option value="${c.num}">${c.num} ${c.label}</option>`).join("");
+  document.getElementById("bErr").className="ferr";
+  document.getElementById("ov2").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeBuilder(){
+  document.getElementById("ov2").classList.remove("open");
+  if(!document.getElementById("ov").classList.contains("open"))document.body.style.overflow="";
+}
+function berr(msg){const e=document.getElementById("bErr");e.textContent=msg;e.className="ferr show"}
+function saveCustom(){
+  const cat=document.getElementById("bCat").value;
+  const a=document.getElementById("bAcr").value.trim().toUpperCase();
+  const n=document.getElementById("bName").value.trim();
+  const d=document.getElementById("bDesc").value.trim();
+  const p=document.getElementById("bPrompt").value.trim();
+  if(!/^[A-Z0-9]{2,5}$/.test(a))return berr("Acronym must be 2 to 5 letters or numbers.");
+  if(IDX[a])return berr("Acronym "+a+" is already in use. Pick another.");
+  if(!n||!d||!p)return berr("Name, description, and prompt are all required.");
+  customs.push({a,n,d,p,cat});
+  store("tk_custom",customs);
+  ["bAcr","bName","bDesc","bPrompt"].forEach(id=>document.getElementById(id).value="");
+  closeBuilder();build();
+  toast("Command "+a+" added","#34d399");
+}
+function delCustom(){
+  if(!cur||!cur.custom)return;
+  customs=customs.filter(c=>c.a!==cur.a);
+  store("tk_custom",customs);
+  delete counts[cur.a];delete notes[cur.a];
+  favs.delete(cur.a);recent=recent.filter(x=>x!==cur.a);
+  store("tk_counts",counts);store("tk_notes",notes);store("tk_favs",[...favs]);store("tk_recent",recent);
+  const gone=cur.a;
+  closeModal();build();
+  toast("Command "+gone+" deleted","#f87171");
+}
+
+// ---------- export ----------
+function dl(name,text,type){
+  const b=new Blob([text],{type});
+  const u=URL.createObjectURL(b);
+  const a=document.createElement("a");
+  a.href=u;a.download=name;a.click();
+  URL.revokeObjectURL(u);
+}
+function exportJSON(){dl("tk-command-tree.json",JSON.stringify(mergedCats(),null,2),"application/json");toast("JSON exported")}
+function exportMD(){
+  let md="# TK Visual Command Tree\n\n";
+  mergedCats().forEach(cat=>{
+    md+="## "+cat.num+" "+cat.label+"\n\n";
+    cat.cmds.forEach(c=>{md+="### "+c.a+" | "+c.n+(c.custom?" (custom)":"")+"\n_"+c.d+"_\n\n```\n"+c.p+"\n```\n\n"});
+  });
+  dl("tk-command-tree.md",md,"text/markdown");toast("Markdown exported");
+}
+
+// ---------- deep links + init ----------
+window.addEventListener("hashchange",()=>{
+  const a=location.hash.slice(1).toUpperCase();
+  if(IDX[a])open2(a);
+});
 build();
+const h0=location.hash.slice(1).toUpperCase();
+if(IDX[h0])open2(h0);
 </script>
 </body>
 </html>
